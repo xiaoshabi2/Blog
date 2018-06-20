@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.gwd.dao.ArchivesDao" >
+
+  <resultMap id="ArchivesResultMap" type="Archives" >
+      <id property="id" column="id"/>
+      <result property="introduction" column="introduction" />
+      <result property="imageUrl" column="imageUrl" />
+      <result property="year" column="year" />
+      <result property="month" column="month" />
+  </resultMap>
+
+    <!--   public List<Archives> selectAllArchives();-->
+    <select id="selectAllArchives"  resultMap="ArchivesResultMap">
+        select * from archives order by date desc
+    </select>
+
+
+
+    
+</mapper>
