@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.gwd.dao.BlogDao" >
+
+  <resultMap id="BlogResultMap" type="Blog" >
+      <id property="id" column="id"/>
+      <result property="title" column="title" />
+      <result property="keywords" column="keywords" />
+      <result property="author" column="author" />
+      <result property="readNum" column="readNum" />
+      <result property="commentNum" column="commentNum" />
+      <result property="releaseTime" column="releaseTime" />
+      <result property="introduction" column="introduction" />
+      <result property="content" column="content" />
+      <result property="imageUrl" column="imageUrl" />
+  </resultMap>
+
+    <resultMap id="BlogResultMapIdAndTitle" type="Blog" >
+        <id property="id" column="id"/>
+        <result property="title" column="title" />
+    </resultMap>
+
+
+    <resultMap id="BlogByFuzzy" type="Blog" >
+        <id property="id" column="id"/>
+        <result property="title" column="title" />
+        <result property="introduction" column="introduction" />
+        <result property="imageUrl" column="imageUrl" />
+    </resultMap>
+
+    <!--   public Blog selectBlogById(Integer id);//通过id查找博客-->
+    <select id="selectBlogById" parameterType="Integer" resultMap="BlogResultMap">
+        select * from blog where id=#{id}
+    </select>
+
+
+    <!--    public List<Blog> selectLastBlog();//查找最新发布的博客-->
+    <select id="selectLastBlog"  resultMap="BlogResultMap">
+      select * from blog  order by releaseTime desc limit 6
+    </select>
+
+    <!--public String selectBlogTitle(Integer id);//查找博客标题-->
+    <select id="selectBlogTitleById" parameterType="Integer" resultType="String">
+        select title from blog where id=#{id}
+    </select>
+
+    <!--    public void updateBlogReadNumById(Integer id);//更新博客阅读次数-->
+    <update id="updateBlogReadNumById" parameterType="Integer">
+        update blog set readNum=readNum+1 where id=#{id}
+    </update>
+
+    <!--    public List<Blog> selectLastBlogIdWithTitle();//查找最新发布的博客10-->
+    <select id="selectLastBlogIdWithTitle"  resultMap="BlogResultMapIdAndTitle">
+        select id,title from blog  order by readNum desc limit 10
+    </select>
+
+    <!--public List<Blog> selectBlogByFuzzy(String title);//模糊匹配查找博客-->
+    <select id="selectBlogByFuzzy"  resultMap="BlogResultMap" parameterType="String">
+        select * from blog  where title  like "%"#{title}"%" or keywords like "%"#{title}"%"
+    </select>
+
+    <!-- public List<Blog> selectBlogByWithLimit(@Param("start") Integer start,@Param("limit") Integer limit);//模糊匹配查找博客-->
+    <select id="selectBlogByWithLimit"  resultMap="BlogResultMap">
+        select * from blog  order by readNum desc limit #{start},6
+    </select>
+
+  <!--public List<Blog> selectBlogByYearAndMonth(@Param("year")String year, @Param("month")String month);//查找指定月的博客-->
+    <select id="selectBlogByYearAndMonth" resultMap="BlogResultMap">
+        select * from  blog where year(releaseTime)=#{year} and month(releaseTime)=#{month} order by releaseTime limit #{start},6
+    </select>
+    
+</mapper>
